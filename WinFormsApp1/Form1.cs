@@ -6,12 +6,13 @@ namespace WinFormsApp1
     {
         public Form1()
         {
+            ExcelPackage.LicenseContext = LicenseContext.NonCommercial;.
             InitializeComponent();
         }
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            ExcelPackage.LicenseContext = LicenseContext.NonCommercial;.
+            
         }
     }
 }
