@@ -1,4 +1,4 @@
-using OfficeOpenXml: // EPPlus
+using OfficeOpenXml; // EPPlus
 
 namespace WinFormsApp1
 {
@@ -6,7 +6,7 @@ namespace WinFormsApp1
     {
         public Form1()
         {
-            ExcelPackage.LicenseContext = LicenseContext.NonCommercial;.
+            ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
             InitializeComponent();
         }
 
