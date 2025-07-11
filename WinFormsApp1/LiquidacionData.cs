@@ -19,10 +19,13 @@ namespace ReadAndConsolidateExcel
         public int? DiasTrabajados { get; set; }
         public decimal? Atraso { get; set; } // Asumiendo que es un valor monetario, si es tiempo, cambiar tipo
         public decimal? Vacaciones { get; set; } // Asumiendo valor monetario o días, ajustar tipo si es necesario
+        public decimal? Vacaciones_dias { get; set; } // Asumiendo valor monetario o horas, ajustar tipo si es necesario
         public string? IsapreFonasa { get; set; } // Nombre de la institución
+        public decimal? PorcentajeSalud { get; set; } // Ej: 7.00 para 7%
         public string? Plan { get; set; }
         public string? Afp { get; set; } // Nombre de la institución
         public decimal? PorcentajeAfp { get; set; } // Ej: 10.77 para 10.77%
+        public decimal? PorcentacjeCesantia { get; set; } // Porcentaje de cesantía, si aplica
         public decimal? SueldoMensual { get; set; } // Pendiente de confirmación de celda origen
         public decimal? Gratificacion { get; set; }
         public decimal? TotalImponible { get; set; }

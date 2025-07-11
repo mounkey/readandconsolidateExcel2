@@ -36,7 +36,7 @@ namespace ReadAndConsolidateExcel
                     var worksheet = package.Workbook.Worksheets.First(); // Asumimos la primera hoja
 
                     // 1. PERIODO (Mes) y AÑO (para nombre de hoja, se pasa por fuera)
-                    string periodoCompleto = worksheet.Cells["C2"].Text?.Trim() ?? string.Empty; // Estimada
+                    string periodoCompleto = worksheet.Cells["B8"].Text?.Trim() ?? string.Empty; // Estimada
                     if (!string.IsNullOrWhiteSpace(periodoCompleto))
                     {
                         // Ejemplo: "MES DE MARZO DE 2019"
@@ -63,10 +63,10 @@ namespace ReadAndConsolidateExcel
                     }
 
                     // 2. RUT
-                    data.Rut = worksheet.Cells["C7"].Text?.Trim(); // Estimada
+                    data.Rut = worksheet.Cells["B12"].Text?.Trim(); // Estimada
 
                     // 3. NOMBRES (ApellidoPaterno, ApellidoMaterno, Nombres)
-                    string nombreCompleto = worksheet.Cells["C6"].Text?.Trim() ?? string.Empty; // Estimada
+                    string nombreCompleto = worksheet.Cells["B11"].Text?.Trim() ?? string.Empty; // Estimada
                     if (!string.IsNullOrWhiteSpace(nombreCompleto))
                     {
                         string[] partesNombre = nombreCompleto.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
@@ -76,37 +76,46 @@ namespace ReadAndConsolidateExcel
                         else if (partesNombre.Length == 1) data.Nombres = partesNombre[0]; // Si solo hay una palabra, asumirla como nombre
                     }
 
-                    data.SueldoBase = GetDecimalFromCell(worksheet, "F10");
-                    data.CentroDeCosto = worksheet.Cells["C8"].Text?.Trim(); // Estimada
-                    data.DiasTrabajados = GetIntFromCell(worksheet, "D10");
-                    data.Vacaciones = GetDecimalFromCell(worksheet, "F11"); // Tratar "-" como 0 o nulo
+                    data.SueldoBase = GetDecimalFromCell(worksheet, "D15");
+                    data.CentroDeCosto = worksheet.Cells["B13"].Text?.Trim(); // Estimada
+                    data.DiasTrabajados = GetIntFromCell(worksheet, "B15");
+                    data.Vacaciones = GetDecimalFromCell(worksheet, "D16");
+                    data.Vacaciones_dias = GetDecimalFromCell(worksheet, "B16");// Tratar "-" como 0 o nulo
 
-                    data.IsapreFonasa = worksheet.Cells["B22"].Text?.Trim(); // Estimada (Nombre Institución)
-                    data.Afp = worksheet.Cells["B21"].Text?.Trim(); // Estimada (Nombre Institución)
+                    data.IsapreFonasa = worksheet.Cells["A26"].Text?.Trim(); // Estimada (Nombre Institución)
+                    data.Afp = worksheet.Cells["A25"].Text?.Trim(); // Estimada (Nombre Institución)
 
-                    string porcentajeAfpText = worksheet.Cells["C21"].Text?.Replace("%", "").Trim() ?? string.Empty; // Estimada
+                    string porcentajeAfpText = worksheet.Cells["B25"].Text?.Replace("%", "").Trim() ?? string.Empty; // Estimada
                     if (decimal.TryParse(porcentajeAfpText, NumberStyles.Any, CultureInfo.InvariantCulture, out decimal porcAfp))
                         data.PorcentajeAfp = porcAfp;
+
+                    string porcentajeSaludText = worksheet.Cells["B26"].Text?.Replace("%", "").Trim() ?? string.Empty; // Estimada
+                    if (decimal.TryParse(porcentajeSaludText, NumberStyles.Any, CultureInfo.InvariantCulture, out decimal porcSalud))
+                        data.PorcentajeSalud= porcSalud; // Asumimos que es el mismo porcentaje para AFP y Salud
+
+                    string porcentajeCesantiaText = worksheet.Cells["B27"].Text?.Replace("%", "").Trim() ?? string.Empty; // Estimada
+                    if (decimal.TryParse(porcentajeCesantiaText, NumberStyles.Any, CultureInfo.InvariantCulture, out decimal porcCesantia))
+                        data.PorcentacjeCesantia= porcCesantia; // Asumimos que es el mismo porcentaje para AFP y Salud
 
                     // SUELDO MENSUAL - PENDIENTE CELDA ORIGEN
                     // data.SueldoMensual = GetDecimalFromCell(worksheet, "CELDA_SUELDO_MENSUAL"); 
                     data.SueldoMensual = data.SueldoBase; // Asunción temporal hasta tener la celda correcta
 
-                    data.Gratificacion = GetDecimalFromCell(worksheet, "F13");
-                    data.TotalImponible = GetDecimalFromCell(worksheet, "F14");
+                    data.Gratificacion = GetDecimalFromCell(worksheet, "D18");
+                    data.TotalImponible = GetDecimalFromCell(worksheet, "D19");
 
                     // TOTAL NO IMPONIBLE - Suma de Locomoción y Colación
-                    decimal? locomocion = GetDecimalFromCell(worksheet, "F15");
-                    decimal? colacion = GetDecimalFromCell(worksheet, "F16"); // GetDecimalFromCell maneja "-" como nulo
+                    decimal? locomocion = GetDecimalFromCell(worksheet, "D20");
+                    decimal? colacion = GetDecimalFromCell(worksheet, "D21"); // GetDecimalFromCell maneja "-" como nulo
                     data.TotalNoImponible = (locomocion ?? 0) + (colacion ?? 0);
                     if (data.TotalNoImponible == 0 && locomocion == null && colacion == null) data.TotalNoImponible = null;
 
 
-                    data.MontoAfp = GetDecimalFromCell(worksheet, "D21");
-                    data.MontoSalud = GetDecimalFromCell(worksheet, "D22");
-                    data.SeguroCesantia = GetDecimalFromCell(worksheet, "D23"); // GetDecimalFromCell maneja "-"
-                    data.TotalDescuentos = GetDecimalFromCell(worksheet, "F24");
-                    data.LiquidoAPagar = GetDecimalFromCell(worksheet, "F26");
+                    data.MontoAfp = GetDecimalFromCell(worksheet, "C25");
+                    data.MontoSalud = GetDecimalFromCell(worksheet, "C26");
+                    data.SeguroCesantia = GetDecimalFromCell(worksheet, "C27"); // GetDecimalFromCell maneja "-"
+                    data.TotalDescuentos = GetDecimalFromCell(worksheet, "D29");
+                    data.LiquidoAPagar = GetDecimalFromCell(worksheet, "D31");
 
                     // TRIBUTABLE - PENDIENTE CELDA ORIGEN
                     // data.Tributable = GetDecimalFromCell(worksheet, "CELDA_TRIBUTABLE");
